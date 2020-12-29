@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import "../css/MyFavourites.css";
 
 const MyFavourites = () => {
   const [favouriteImages, setFavouriteImages] = useState([]);
@@ -30,8 +31,7 @@ const MyFavourites = () => {
       })
       .then((res) => console.log(res));
     const data = favouriteImages.filter((i) => i.id !== id);
-    console.log("data", data);
-    console.log("pocetni", favouriteImages);
+
     setFavouriteImages(data);
   };
 
@@ -39,8 +39,9 @@ const MyFavourites = () => {
     const { id } = item;
 
     return (
-      <div key={item + Math.random()}>
-        <img src={item.image.url} />
+      <div key={item + Math.random()} className="container_Myfavourites">
+        <img src={item.image.url} alt="favourite cat" />
+
         <button onClick={() => onDeleteFavourite(id)}>Delete Favourite</button>
       </div>
     );

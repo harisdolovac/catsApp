@@ -1,0 +1,9 @@
+.navBar {
+  background-image: url("https://g77v3827gg2notadhhw9pew7-wpengine.netdna-ssl.com/wp-content/uploads/2019/02/CatFT2-1024x683.jpg");
+  background-repeat: no-repeat, repeat;
+  background-size: cover;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
