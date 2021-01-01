@@ -13,7 +13,7 @@ const ChooseCat = () => {
       "x-api-key": "baba38b8-f29d-4777-a23b-5ca439e12373",
     },
     params: {
-      limit: 6,
+      limit: 5,
       page: page,
     },
   });
@@ -58,11 +58,11 @@ const ChooseCat = () => {
 
   const handlePagination = () => {
     setPage((page) => page + 1);
-    console.log(page);
   };
 
   return (
     <div>
+      <h1>Click on cat to make your favourite</h1>
       <div className="results_ChooseCat">{results}</div>
 
       <button onClick={handlePagination} className="button_chooseCat">

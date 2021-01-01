@@ -1,3 +1,6 @@
+* {
+}
+
 .home_container {
   display: flex;
   justify-content: center;
@@ -11,7 +14,7 @@
   max-height: 50%;
   margin: 10px;
   border: 5px solid black;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 @media only screen and (max-width: 600px) {
@@ -30,7 +33,7 @@
   padding: 15px;
 }
 
-.home_buttons > button {
+.home_button {
   width: 300px;
   box-shadow: 0px 10px 14px -7px #276873;
   background: linear-gradient(to bottom, #599bb3 5%, #408c99 100%);
@@ -47,7 +50,7 @@
   text-shadow: 0px 1px 0px #3d768a;
   margin-bottom: 20px;
 }
-.home_buttons > button:hover {
+.home_button:hover {
   background: linear-gradient(to bottom, #408c99 5%, #599bb3 100%);
   background-color: #408c99;
 }
@@ -66,7 +69,7 @@
   height: 25px;
 }
 
-.cat_select_home > select {
+.select {
   position: relative;
   font-family: Arial;
 

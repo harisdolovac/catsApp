@@ -1,99 +1,84 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import "../css/Home.css";
+import axios from "axios";
 
-function Home() {
-  const [data, setData] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [category, setCategory] = useState();
+const Home = () => {
+  const [value, setValue] = useState();
+  const [populateDropdown, setPopulateDropdown] = useState([]);
+  const [imgUrl, setImgUrl] = useState();
 
   const URL = "https://api.thecatapi.com/v1";
 
-  const fetchData = () => {
-    const imageSearch = `${URL}/images/search?api_key=baba38b8-f29d-4777-a23b-5ca439e12373`;
-    const dropDownSearch = `${URL}/categories`;
-
-    const getImageSearch = axios.get(imageSearch);
-    const getdropDownSearch = axios.get(dropDownSearch);
-
-    axios.all([getImageSearch, getdropDownSearch]).then(
-      axios.spread((...allData) => {
-        const allImageData = allData[0];
-        const allDropdowndata = allData[1];
-        const newData = allImageData.data;
-        const newDrop = allDropdowndata.data;
-
-        setData(newData);
-        setCategories(newDrop);
-      })
-    );
-  };
-
   useEffect(() => {
-    fetchData();
+    axios
+      .get(`${URL}/categories`, {
+        headers: {
+          "x-api-key": "baba38b8-f29d-4777-a23b-5ca439e12373",
+        },
+      })
+      .then((res) =>
+        res.data.map((item) => {
+          return setPopulateDropdown((prevState) => [...prevState, item]); //setCategories((prevState) => [...prevState, item]);
+        })
+      );
   }, []);
 
-  const handleCategories = (e) => {
-    e.preventDefault();
-    axios(`${URL}/categories`)
-      //  .then((res) => setCategories(res.data))
-      .then((res) => console.log(res.data))
+  useEffect(() => {
+    axios
+      .get(`${URL}/images/search`, {
+        headers: {
+          "x-api-key": "baba38b8-f29d-4777-a23b-5ca439e12373",
+        },
+      })
+      .then((res) =>
+        res.data.map((item) => {
+          return setImgUrl(item.url); //setCategories((prevState) => [...prevState, item]);
+        })
+      );
+  }, []);
 
-      .catch((error) => console.log(error.res));
-    setCategory(e.target.value);
+  const handleChange = (event) => {
+    setValue(event.target.value);
   };
 
-  const handleCat = (e) => {
-    e.preventDefault();
-    if (category) {
-      console.log("ima kategoriju");
-      axios(`${URL}/images/search?category_ids=${category}`)
-        .then((res) => setData(res.data))
-
-        .catch((error) => console.log(error.res));
+  const handleSubmit = (event) => {
+    console.log("Your favorite flavor is: " + value);
+    event.preventDefault();
+    if (value === undefined) {
+      axios
+        .get(`${URL}/images/search`)
+        .then((res) => res.data.map((resI) => setImgUrl(resI.url)));
     } else {
-      //console.log("nema kategoriju");
-      axios(`${URL}/images/search`).then((res) => {
-        setData(res.data);
-      });
+      axios(`${URL}/images/search?category_ids=${value}`).then((res) =>
+        res.data.map((resI) => setImgUrl(resI.url))
+      );
     }
   };
 
-  // console.log("categores", category);
-
-  // console.log(categories);
-
   return (
-    <div>
-      {data.length > 0 &&
-        data.map((item) => {
-          return (
-            <div key={item.id} className="home_container">
-              <img src={item.url} alt="cats" className="home_image" />
-              <div className="home_buttons">
-                <button onClick={handleCat}>Next Cat</button>
-                <div className="cat_select_home">
-                  <label className="label" htmlFor="category_select">
-                    Categories:
-                  </label>
-                  <select onClick={handleCategories} id="category_select">
-                    {category !== undefined
-                      ? categories.map((item) => {
-                          return (
-                            <option key={item.id} value={item.id}>
-                              {item.name}
-                            </option>
-                          );
-                        })
-                      : "Short by category"}
-                  </select>
-                </div>
-              </div>
-            </div>
-          );
-        })}
+    <div className="home_container">
+      <img src={imgUrl} className="home_image" alt="random cats"></img>
+      <form onSubmit={handleSubmit}>
+        <div className="home_buttons">
+          <div className="cat_select_home">
+            <input type="submit" value="Next cat" className="home_button" />
+            <label>
+              Pick cat category:
+              <select value={value} onChange={handleChange} className="select">
+                {populateDropdown.map((res) => (
+                  <option key={res.id * Math.random()} value={res.id}>
+                    {res.name}
+                  </option>
+                ))}
+
+                <option>None</option>
+              </select>
+            </label>
+          </div>
+        </div>
+      </form>
     </div>
   );
-}
+};
 
 export default Home;

@@ -7,7 +7,6 @@ import { Provider } from "react-redux";
 import Navbar from "./components/Navbar";
 import ChooseCat from "./components/ChooseCat";
 import MyFavourites from "./components/MyFavourites";
-import Favourites from "./Favourites";
 
 const App = () => {
   return (
@@ -23,9 +22,6 @@ const App = () => {
           </Route>
           <Route path="/myFavourites">
             <MyFavourites />
-          </Route>
-          <Route path="/Favourites">
-            <Favourites />
           </Route>
         </Switch>
       </Router>
