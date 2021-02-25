@@ -1,38 +1,25 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useEffect } from "react";
+import "../css/Home.css";
+
+import { useSelector, useDispatch } from "react-redux";
+import {
+  deleteFavouriteCat,
+  favouriteCat,
+} from "../actions/actions-favourites";
 import "../css/MyFavourites.css";
 
 const MyFavourites = () => {
-  const [favouriteImages, setFavouriteImages] = useState([]);
+  const favouriteImages = useSelector(
+    (state) => state.getFavouriteReducer.favouriteImages
+  );
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    axios
-      .get("https://api.thecatapi.com/v1/favourites", {
-        headers: {
-          "x-api-key": "baba38b8-f29d-4777-a23b-5ca439e12373",
-        },
-        params: {
-          sub_id: "your-user-1234",
-        },
-      })
-      .then((res) =>
-        res.data.map((item) => {
-          return setFavouriteImages((prevState) => [...prevState, item]);
-        })
-      );
-  }, []);
+    dispatch(favouriteCat());
+  }, [dispatch]);
 
   const onDeleteFavourite = (id) => {
-    axios
-      .delete(`https://api.thecatapi.com/v1/favourites/${id}`, {
-        headers: {
-          "x-api-key": "baba38b8-f29d-4777-a23b-5ca439e12373",
-        },
-      })
-      .then((res) => console.log(res));
-    const data = favouriteImages.filter((i) => i.id !== id);
-
-    setFavouriteImages(data);
+    dispatch(deleteFavouriteCat(id));
   };
 
   const favImages = favouriteImages.map((item) => {
@@ -50,7 +37,7 @@ const MyFavourites = () => {
   return (
     <div>
       <h1>My favourites</h1>
-      <p>List of favourites</p>
+
       {favImages}
     </div>
   );

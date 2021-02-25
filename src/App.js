@@ -1,12 +1,14 @@
 import React from "react";
-import Home from "./components/Home";
 import "./index.css";
+
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import store from "./reducers/store";
 import { Provider } from "react-redux";
+
 import Navbar from "./components/Navbar";
-import ChooseCat from "./components/ChooseCat";
+import Home from "./components/Home";
 import MyFavourites from "./components/MyFavourites";
+import ChooseCat from "./components/ChooseCat";
 
 const App = () => {
   return (
@@ -17,11 +19,11 @@ const App = () => {
           <Route path="/" exact>
             <Home />
           </Route>
-          <Route path="/selectCat">
-            <ChooseCat />
-          </Route>
-          <Route path="/myFavourites">
+          <Route path="/myfavourites">
             <MyFavourites />
+          </Route>
+          <Route path="/choose">
+            <ChooseCat />
           </Route>
         </Switch>
       </Router>

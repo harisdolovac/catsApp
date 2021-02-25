@@ -1,83 +1,67 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import "../css/Home.css";
-import axios from "axios";
+
+import { useSelector, useDispatch } from "react-redux";
+import { getDropdownCat, getUser, userValue } from "../actions/actionsHome";
 
 const Home = () => {
-  const [value, setValue] = useState();
-  const [populateDropdown, setPopulateDropdown] = useState([]);
-  const [imgUrl, setImgUrl] = useState();
+  const dropdown = useSelector((state) => state.homeN.populateDropdown);
+  const imgUrl = useSelector((state) => state.homeImg.imageUrl);
+  const dispatch = useDispatch();
 
-  const URL = "https://api.thecatapi.com/v1";
-
-  useEffect(() => {
-    axios
-      .get(`${URL}/categories`, {
-        headers: {
-          "x-api-key": "baba38b8-f29d-4777-a23b-5ca439e12373",
-        },
-      })
-      .then((res) =>
-        res.data.map((item) => {
-          return setPopulateDropdown((prevState) => [...prevState, item]); //setCategories((prevState) => [...prevState, item]);
-        })
-      );
-  }, []);
+  const valueR = useSelector((state) => state.userValue.value);
 
   useEffect(() => {
-    axios
-      .get(`${URL}/images/search`, {
-        headers: {
-          "x-api-key": "baba38b8-f29d-4777-a23b-5ca439e12373",
-        },
-      })
-      .then((res) =>
-        res.data.map((item) => {
-          return setImgUrl(item.url); //setCategories((prevState) => [...prevState, item]);
-        })
-      );
-  }, []);
+    dispatch(getDropdownCat());
+    dispatch(getUser(valueR));
+  }, [dispatch, valueR]);
 
-  const handleChange = (event) => {
-    setValue(event.target.value);
-  };
+  const handleChange = (e) => {
+    const dataV = e.target.value;
 
-  const handleSubmit = (event) => {
-    console.log("Your favorite flavor is: " + value);
-    event.preventDefault();
-    if (value === undefined) {
-      axios
-        .get(`${URL}/images/search`)
-        .then((res) => res.data.map((resI) => setImgUrl(resI.url)));
-    } else {
-      axios(`${URL}/images/search?category_ids=${value}`).then((res) =>
-        res.data.map((resI) => setImgUrl(resI.url))
-      );
-    }
+    dispatch(userValue(dataV));
   };
+  const handleSubmit = (e, valueR) => {
+    e.preventDefault();
+    dispatch(getUser(valueR));
+  };
+  console.log(imgUrl);
 
   return (
-    <div className="home_container">
-      <img src={imgUrl} className="home_image" alt="random cats"></img>
-      <form onSubmit={handleSubmit}>
-        <div className="home_buttons">
-          <div className="cat_select_home">
-            <input type="submit" value="Next cat" className="home_button" />
-            <label>
-              Pick cat category:
-              <select value={value} onChange={handleChange} className="select">
-                {populateDropdown.map((res) => (
-                  <option key={res.id * Math.random()} value={res.id}>
-                    {res.name}
-                  </option>
-                ))}
+    <>
+      <h1>View cat</h1>
+      <div className="home_container">
+        {imgUrl === "" ? (
+          "LOADING...."
+        ) : (
+          <img src={imgUrl} className="home_image" alt="random cats"></img>
+        )}
 
-                <option>None</option>
-              </select>
-            </label>
+        <form onSubmit={(e) => handleSubmit(e, valueR)}>
+          <div className="home_buttons">
+            <div className="cat_select_home">
+              <input type="submit" value="Next cat" className="home_button" />
+
+              <label>
+                <h3>Pick cat category:</h3>
+                <select
+                  className="select"
+                  onChange={handleChange}
+                  value={valueR}
+                >
+                  <option value="">Random</option>
+                  {dropdown.map((res) => (
+                    <option key={res.id * Math.random()} value={res.id}>
+                      {res.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
           </div>
-        </div>
-      </form>
-    </div>
+        </form>
+      </div>
+    </>
   );
 };
 

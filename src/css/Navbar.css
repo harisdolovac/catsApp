@@ -11,9 +11,15 @@
   justify-content: space-around;
   flex-wrap: wrap;
 }
-.navBar > i:hover {
+.navBar h1:hover {
   color: red;
 }
 .fas:hover {
   color: black;
+}
+.navBar h1 {
+  padding-top: 15px;
+}
+.fas {
+  padding-top: 10px;
 }

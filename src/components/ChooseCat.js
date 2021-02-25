@@ -1,47 +1,28 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+
+import {
+  chooseCat,
+  chooseFavouriteCat,
+  nextPage,
+} from "../actions/actions-choose";
+
 import "../css/ChooseCat.css";
 
 const ChooseCat = () => {
-  const [data, setData] = useState([]);
+  const data = useSelector((state) => state.chooseCat.data);
+  const page = useSelector((state) => state.chooseCat.page);
 
-  const [page, setPage] = useState(0);
-
-  const api = axios.create({
-    baseURL: `https://api.thecatapi.com/v1`,
-    headers: {
-      "x-api-key": "baba38b8-f29d-4777-a23b-5ca439e12373",
-    },
-    params: {
-      limit: 5,
-      page: page,
-    },
-  });
-  console.log(data);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    api.get("/images/search").then((res) => setData(res.data));
-  }, [page]);
+    dispatch(chooseCat());
+  }, [page, dispatch]);
 
   const handleFavourite = (id) => {
-    const config = {
-      headers: {
-        "content-type": "application/json",
-        "x-api-key": "baba38b8-f29d-4777-a23b-5ca439e12373",
-      },
-    };
-
-    axios.post(
-      "https://api.thecatapi.com/v1/favourites",
-      {
-        image_id: `${id}`,
-        sub_id: "your-user-1234",
-      },
-      config
-    );
+    dispatch(chooseFavouriteCat(id));
   };
 
-  console.log(data);
   const results = data.map((item) => {
     const { url, id } = item;
     return (
@@ -57,14 +38,13 @@ const ChooseCat = () => {
   });
 
   const handlePagination = () => {
-    setPage((page) => page + 1);
+    dispatch(nextPage());
   };
 
   return (
     <div>
       <h1>Click on cat to make your favourite</h1>
       <div className="results_ChooseCat">{results}</div>
-
       <button onClick={handlePagination} className="button_chooseCat">
         Next Page
       </button>
